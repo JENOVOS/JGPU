@@ -1,14 +1,17 @@
 #pragma once
+#include "common.h"
 #include "enumes.h"
 
 namespace jgpu
 {
 	class Instance;
+	class Device;
+	class Adapter;
 	class Factory
 	{
 	public:
-		virtual std::unique_ptr<Instance> CreateInstance(bool enableDebug = false) = 0;
+		[[nodiscard]] virtual JCreateResult<Instance> CreateInstance(bool enableDebug = false) = 0;
 	};
 
-	std::unique_ptr<Factory> CreateFactory(GraphicsAPI type);
+	[[nodiscard]] JCreateResult<Factory> CreateFactory(GraphicsAPI type);
 }

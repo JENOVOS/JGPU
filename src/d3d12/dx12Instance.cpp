@@ -1,10 +1,16 @@
 #include "dx12Instance.h"
 
+#include "dx12Adapter.h"
 #include "dx12Utils.h"
 
 namespace jgpu::d3d12
 {
-	DX12Instance::DX12Instance(bool enableDebug)
+	DX12Instance::DX12Instance(Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory)
+		: dxgiFactory_(std::move(dxgiFactory))
+	{
+	}
+
+	JCreateResult<DX12Instance> DX12Instance::CreateInstance(bool enableDebug)
 	{
 		uint32_t dxgiFalgs = 0;
 		if (enableDebug)
@@ -17,6 +23,18 @@ namespace jgpu::d3d12
 			}
 		}
 
-		utils::ThrowIfFailed(CreateDXGIFactory2(dxgiFalgs, IID_PPV_ARGS(&dxgiFactory_)));
+		Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory;
+		auto hr = CreateDXGIFactory2(dxgiFalgs, IID_PPV_ARGS(&dxgiFactory));
+		if (FAILED(hr))
+		{
+			return utils::MakeHResultError("Failed to create dxgi factory", hr);
+		}
+
+		return std::unique_ptr<DX12Instance>(new DX12Instance(dxgiFactory));
+	}
+
+	JCreateResult<Adapter> DX12Instance::FindAdapter()
+	{
+		return DX12Adapter::FindAdapter(dxgiFactory_.Get());
 	}
 }

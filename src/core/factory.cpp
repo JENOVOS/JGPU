@@ -4,16 +4,16 @@
 
 namespace jgpu
 {
-	std::unique_ptr<Factory> CreateFactory(GraphicsAPI type)
+	JCreateResult<Factory> CreateFactory(GraphicsAPI type)
 	{
 		switch (type)
 		{
 		case GraphicsAPI::DirectX12:
 			return std::make_unique<d3d12::DX12Factory>();
 		case GraphicsAPI::Vulkan:
-			return nullptr;
+			return std::unexpected{ "Failed to create factory" };
 		}
 
-		return nullptr;
+		return std::unexpected{ "Failed to create factory" };
 	}
 }

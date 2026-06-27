@@ -1,11 +1,13 @@
 #include "dx12Factory.h"
 
 #include "dx12Instance.h"
+#include "dx12Device.h"
+#include "dx12Adapter.h"
 
 namespace jgpu::d3d12
 {
-	std::unique_ptr<Instance> DX12Factory::CreateInstance(bool enableDebug)
+	JCreateResult<Instance> DX12Factory::CreateInstance(bool enableDebug)
 	{
-		return std::make_unique<DX12Instance>(enableDebug);
+		return DX12Instance::CreateInstance(enableDebug);
 	}
 }
