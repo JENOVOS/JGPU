@@ -1,8 +1,12 @@
-﻿// JGPU.h : 標準のシステム インクルード ファイル用のインクルード ファイル、
-// または、プロジェクト専用のインクルード ファイル。
+﻿#pragma once
 
-#pragma once
+// --- Rendering Hardware Interface
+#include "factory.h"
+#include "instance.h"
+// ---
 
-#include <iostream>
-
-// TODO: プログラムに必要な追加ヘッダーをここで参照します。
+// --- Types 
+#include "types.h"
+#include "enumes.h"
+#include "handle.h"
+// ---

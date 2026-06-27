@@ -3,6 +3,7 @@
 
 int main()
 {
-	std::cout << "Hello World" << std::endl;
+	auto factory = jgpu::CreateFactory(jgpu::GraphicsAPI::DirectX12);
+	auto instance = factory->CreateInstance(true);
 	return 0;
 }
