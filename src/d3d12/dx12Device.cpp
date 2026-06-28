@@ -1,6 +1,7 @@
 #include "dx12Device.h"
 
 #include "dx12Adapter.h"
+#include "dx12Queue.h"
 #include "dx12Utils.h"
 
 namespace jgpu::d3d12
@@ -17,6 +18,11 @@ namespace jgpu::d3d12
 		}
 
 		return std::unique_ptr<DX12Device>(new DX12Device(device));
+	}
+
+	JCreateResult<Queue> DX12Device::CreateQueue(QueueType type)
+	{
+		return DX12Queue::CreateQueue(*this, type);
 	}
 
 	DX12Device::DX12Device(Microsoft::WRL::ComPtr<ID3D12Device5> device)

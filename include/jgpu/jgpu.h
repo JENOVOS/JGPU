@@ -5,6 +5,8 @@
 #include "instance.h"
 #include "adapter.h"
 #include "device.h"
+#include "queue.h"
+#include "swapchain.h"
 // ---
 
 // --- Commons

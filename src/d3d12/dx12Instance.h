@@ -12,6 +12,9 @@ namespace jgpu::d3d12
 		[[nodiscard]] static JCreateResult<DX12Instance> CreateInstance(bool enableDebug = false);
 
 		[[nodiscard]] JCreateResult<Adapter> FindAdapter() override;
+		[[nodiscard]] JCreateResult<Swapchain> CreateSwapchain(Queue& graphicsQueue, const SwapchainSpecification& spec) override;
+
+		[[nodiscard]] IDXGIFactory7* GetNativeDXGIFactory() const { return dxgiFactory_.Get(); }
 		
 	private:
 		DX12Instance(Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory);

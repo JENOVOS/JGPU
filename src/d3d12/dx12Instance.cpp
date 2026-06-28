@@ -1,6 +1,8 @@
 #include "dx12Instance.h"
 
 #include "dx12Adapter.h"
+#include "dx12Swapchain.h"
+#include "dx12Queue.h"
 #include "dx12Utils.h"
 
 namespace jgpu::d3d12
@@ -36,5 +38,12 @@ namespace jgpu::d3d12
 	JCreateResult<Adapter> DX12Instance::FindAdapter()
 	{
 		return DX12Adapter::FindAdapter(dxgiFactory_.Get());
+	}
+
+	JCreateResult<Swapchain> DX12Instance::CreateSwapchain(Queue& graphicsQueue, const SwapchainSpecification& spec)
+	{
+		auto* dx12Queue = dynamic_cast<DX12Queue*>(&graphicsQueue);
+
+		return DX12Swapchain::CreateSwapchain(*this, *dx12Queue, spec);
 	}
 }

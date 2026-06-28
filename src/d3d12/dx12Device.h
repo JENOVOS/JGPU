@@ -12,6 +12,9 @@ namespace jgpu::d3d12
 		~DX12Device() noexcept = default;
 
 		[[nodiscard]] static JCreateResult<DX12Device> CreateDevice(const DX12Adapter& adapter);
+
+		[[nodiscard]] JCreateResult<Queue> CreateQueue(QueueType type) override;
+
 		[[nodiscard]] ID3D12Device5* GetNativeDevice() const { return device_.Get(); }
 
 	private:
