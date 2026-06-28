@@ -9,12 +9,15 @@ types such as `ID3D12Device`, `ID3D12CommandQueue`, and `IDXGISwapChain`.
 ## Current Status
 
 JGPU is under active development. The current codebase can initialize a DirectX
-12 backend, select a hardware adapter, create a device and command queue, create
-an HWND swapchain, and fetch swapchain back buffers as `jgpu::Texture` objects.
+12 backend, select a hardware adapter, create a device and graphics queue,
+create an HWND swapchain, fetch back buffers, create render target views, record
+basic clear commands, submit them, wait for the queue, and present the
+swapchain.
 
 The `examples/Triangle` sample is currently a bring-up sample rather than a
 rendering sample: it creates a GLFW window, initializes JGPU, creates the
-swapchain, and retrieves the back buffers. It does not draw a triangle yet.
+swapchain, clears the current back buffer, and presents it. It does not draw a
+triangle yet.
 
 ## Implemented So Far
 
@@ -24,19 +27,25 @@ swapchain, and retrieves the back buffers. It does not draw a triangle yet.
 - High-performance hardware adapter selection
 - D3D12 device creation at feature level 12.0
 - Queue abstraction backed by `ID3D12CommandQueue`
+- Queue submission and `WaitIdle` synchronization through a D3D12 fence
 - HWND swapchain creation through DXGI
-- Swapchain back buffer retrieval as `jgpu::Texture`
+- Swapchain back buffer retrieval, current back buffer index, and present
+- Basic command encoder backed by D3D12 command allocator/list
+- Texture resource barriers through `ResourceState`
+- Render target texture view creation
+- Internal RTV descriptor heap allocation
+- Render target clear commands
 - Basic resource, buffer, texture, and texture view interface types
 - Error handling through `std::expected`
 
 ## In Progress / Not Implemented Yet
 
-- Command allocator and command list abstraction
-- Fence synchronization
-- Descriptor heap and descriptor view management
-- Render target view creation and binding
-- Swapchain present, resize, and frame acquisition helpers
+- General descriptor heap and descriptor view management
+- Depth stencil, shader resource, and unordered access texture views
+- Swapchain resize and fuller frame lifecycle helpers
 - Standalone buffer and texture creation APIs
+- Vertex, index, and constant buffer binding
+- Draw / dispatch command APIs
 - Graphics pipeline and shader management
 - Actual triangle rendering in the sample
 - Vulkan backend implementation
@@ -100,10 +109,85 @@ int main()
         return -1;
     }
 
-    auto backBuffer = (*swapchain)->GetBuffer(0);
+    auto frameIndex = (*swapchain)->GetCurrentBackBufferIdx();
+    auto backBuffer = (*swapchain)->GetBackBuffer(frameIndex);
     if (!backBuffer)
     {
         std::cerr << backBuffer.error() << std::endl;
+        return -1;
+    }
+
+    jgpu::TextureViewSpecification rtvSpec{};
+    rtvSpec.type = jgpu::TextureViewType::RenderTarget;
+    rtvSpec.format = swapchainSpec.format;
+
+    auto backBufferView = (*device)->CreateTextureView(**backBuffer, rtvSpec);
+    if (!backBufferView)
+    {
+        std::cerr << backBufferView.error() << std::endl;
+        return -1;
+    }
+
+    auto encoder = (*device)->CreateCommandEncoder(jgpu::QueueType::Graphics);
+    if (!encoder)
+    {
+        std::cerr << encoder.error() << std::endl;
+        return -1;
+    }
+
+    auto clearColor = jgpu::ClearColor{ .r = 0.1f, .g = 0.1f, .b = 0.1f, .a = 1.0f };
+
+    if (auto result = (*encoder)->Begin(); !result)
+    {
+        std::cerr << result.error() << std::endl;
+        return -1;
+    }
+
+    if (auto result = (*encoder)->TransitionTexture(
+        **backBuffer,
+        jgpu::ResourceState::Present,
+        jgpu::ResourceState::RenderTarget); !result)
+    {
+        std::cerr << result.error() << std::endl;
+        return -1;
+    }
+
+    if (auto result = (*encoder)->ClearTextureView(**backBufferView, clearColor); !result)
+    {
+        std::cerr << result.error() << std::endl;
+        return -1;
+    }
+
+    if (auto result = (*encoder)->TransitionTexture(
+        **backBuffer,
+        jgpu::ResourceState::RenderTarget,
+        jgpu::ResourceState::Present); !result)
+    {
+        std::cerr << result.error() << std::endl;
+        return -1;
+    }
+
+    if (auto result = (*encoder)->Finish(); !result)
+    {
+        std::cerr << result.error() << std::endl;
+        return -1;
+    }
+
+    if (auto result = (*graphicsQueue)->Submit(**encoder); !result)
+    {
+        std::cerr << result.error() << std::endl;
+        return -1;
+    }
+
+    if (auto result = (*swapchain)->Present(); !result)
+    {
+        std::cerr << result.error() << std::endl;
+        return -1;
+    }
+
+    if (auto result = (*graphicsQueue)->WaitIdle(); !result)
+    {
+        std::cerr << result.error() << std::endl;
         return -1;
     }
 
@@ -124,9 +208,11 @@ Application code should use common interfaces such as:
 - `jgpu::Device`
 - `jgpu::Queue`
 - `jgpu::Swapchain`
+- `jgpu::CommandEncoder`
 - `jgpu::Resource`
 - `jgpu::Buffer`
 - `jgpu::Texture`
+- `jgpu::TextureView`
 
 The DirectX 12 backend internally provides types such as:
 
@@ -137,6 +223,8 @@ The DirectX 12 backend internally provides types such as:
 - `jgpu::d3d12::DX12Queue`
 - `jgpu::d3d12::DX12Swapchain`
 - `jgpu::d3d12::DX12Texture`
+- `jgpu::d3d12::DX12TextureView`
+- `jgpu::d3d12::DX12CommandEncoder`
 
 Public headers should avoid exposing DirectX 12 or DXGI types directly.
 
