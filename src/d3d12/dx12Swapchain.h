@@ -1,5 +1,6 @@
 #pragma once
 #include "jgpu/swapchain.h"
+#include "jgpu/buffer.h"
 #include "jgpu/types.h"
 
 namespace jgpu::d3d12
@@ -18,10 +19,14 @@ namespace jgpu::d3d12
 			const jgpu::SwapchainSpecification& spec
 		);
 
+		[[nodiscard]] JCreateResult<jgpu::Texture> GetBuffer(uint32_t index) override;
+
 		[[nodiscard]] IDXGISwapChain4* GetNativeSwapchain() const { return swapchain_.Get(); }
 
 	private:
-		DX12Swapchain(Microsoft::WRL::ComPtr<IDXGISwapChain4> swapchain);
+		DX12Swapchain(Microsoft::WRL::ComPtr<IDXGISwapChain4> swapchain, jgpu::SwapchainSpecification spec);
 		Microsoft::WRL::ComPtr<IDXGISwapChain4> swapchain_;
+
+		jgpu::SwapchainSpecification spec_{};
 	};
 }

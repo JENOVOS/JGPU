@@ -2,6 +2,7 @@
 
 #include "dx12Instance.h"
 #include "dx12Queue.h"
+#include "dx12Texture.h"
 #include "dx12Utils.h"
 
 namespace jgpu::d3d12
@@ -10,7 +11,7 @@ namespace jgpu::d3d12
 		const DX12Instance& instance, 
 		const DX12Queue& graphicsQueue, 
 		const jgpu::SwapchainSpecification& spec
-	)
+	) 
 	{
 		auto* nativeDXGIFactory = instance.GetNativeDXGIFactory();
 		auto* nativeGraphicsQueue = graphicsQueue.GetNativeQueue();
@@ -50,11 +51,23 @@ namespace jgpu::d3d12
 			return utils::MakeHResultError("Failed to convert swapchain1 to swapchain4", hr);
 		}
 
-		return std::unique_ptr<DX12Swapchain>(new DX12Swapchain(swapchain));
+		return std::unique_ptr<DX12Swapchain>(new DX12Swapchain(swapchain, spec));
 	}
 
-	DX12Swapchain::DX12Swapchain(Microsoft::WRL::ComPtr<IDXGISwapChain4> swapchain)
-		: swapchain_(std::move(swapchain))
+	JCreateResult<Texture> DX12Swapchain::GetBuffer(uint32_t index)
+	{
+		Microsoft::WRL::ComPtr<ID3D12Resource> buffer;
+		auto hr = swapchain_->GetBuffer(static_cast<UINT>(index), IID_PPV_ARGS(&buffer));
+		if (FAILED(hr))
+		{
+			return utils::MakeHResultError("Failed to get back buffer", hr);
+		}
+
+		return std::make_unique<DX12Texture>(std::move(buffer));
+	}
+
+	DX12Swapchain::DX12Swapchain(Microsoft::WRL::ComPtr<IDXGISwapChain4> swapchain, jgpu::SwapchainSpecification spec)
+		: swapchain_(std::move(swapchain)), spec_(spec)
 	{
 
 	}

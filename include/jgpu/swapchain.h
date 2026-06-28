@@ -3,6 +3,7 @@
 
 namespace jgpu
 {
+	class Texture;
 	class Swapchain
 	{
 	public:
@@ -10,5 +11,7 @@ namespace jgpu
 
 		Swapchain() = default;
 		virtual ~Swapchain() noexcept = default;
+
+		[[nodiscard]] virtual JCreateResult<Texture> GetBuffer(uint32_t index) = 0;
 	};
 }

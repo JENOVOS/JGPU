@@ -7,6 +7,10 @@
 #include "device.h"
 #include "queue.h"
 #include "swapchain.h"
+#include "resouce.h"
+#include "buffer.h"
+#include "texture.h"
+#include "textureView.h"
 // ---
 
 // --- Commons
