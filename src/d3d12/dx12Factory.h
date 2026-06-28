@@ -7,6 +7,6 @@ namespace jgpu::d3d12
 	class DX12Factory final : public jgpu::Factory
 	{
 	public:
-		[[nodiscard]] JCreateResult<Instance> CreateInstance(bool enableDebug = false) override;
+		[[nodiscard]] JCreateResult<Instance> CreateInstance() override;
 	};
 }

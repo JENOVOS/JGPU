@@ -10,7 +10,7 @@ namespace jgpu
 	class Factory
 	{
 	public:
-		[[nodiscard]] virtual JCreateResult<Instance> CreateInstance(bool enableDebug = false) = 0;
+		[[nodiscard]] virtual JCreateResult<Instance> CreateInstance() = 0;
 	};
 
 	[[nodiscard]] JCreateResult<Factory> CreateFactory(GraphicsAPI type);

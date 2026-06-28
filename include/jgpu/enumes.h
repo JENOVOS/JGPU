@@ -23,6 +23,20 @@ namespace jgpu
         UnorderedAccess,
     };
 
+    enum class ResourceState
+    {
+        Undefined,
+        Present,
+        RenderTarget,
+        CopySource,
+        CopyDestination,
+        VertexBuffer,
+        IndexBuffer,
+        ConstantBuffer,
+        ShaderResource,
+        UnorderedAccess,
+    };
+
     enum class Format : uint32_t
     {
         Undefined = 0,

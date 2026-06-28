@@ -6,8 +6,8 @@
 
 namespace jgpu::d3d12
 {
-	JCreateResult<Instance> DX12Factory::CreateInstance(bool enableDebug)
+	JCreateResult<Instance> DX12Factory::CreateInstance()
 	{
-		return DX12Instance::CreateInstance(enableDebug);
+		return DX12Instance::CreateInstance();
 	}
 }

@@ -3,6 +3,7 @@
 
 namespace jgpu
 {
+	class CommandEncoder;
 	class Queue
 	{
 	public:
@@ -10,5 +11,7 @@ namespace jgpu
 		Queue() = default;
 		virtual ~Queue() noexcept = default;
 
+		virtual JVoidResult Submit(CommandEncoder& encoder) = 0;
+		virtual JVoidResult WaitIdle() = 0;
 	};
 }

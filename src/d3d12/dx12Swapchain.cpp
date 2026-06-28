@@ -66,6 +66,22 @@ namespace jgpu::d3d12
 		return std::make_unique<DX12Texture>(std::move(buffer));
 	}
 
+	uint32_t DX12Swapchain::GetCurrentBackBufferIdx()
+	{
+		return static_cast<uint32_t>(swapchain_->GetCurrentBackBufferIndex());
+	}
+
+	JVoidResult DX12Swapchain::Present()
+	{
+		auto hr = swapchain_->Present(1, 0);
+		if (FAILED(hr))
+		{
+			return utils::MakeHResultError("Failed to present swapchain", hr);
+		}
+
+		return {};
+	}
+
 	DX12Swapchain::DX12Swapchain(Microsoft::WRL::ComPtr<IDXGISwapChain4> swapchain, jgpu::SwapchainSpecification spec)
 		: swapchain_(std::move(swapchain)), spec_(spec)
 	{

@@ -11,6 +11,7 @@
 #include "buffer.h"
 #include "texture.h"
 #include "textureView.h"
+#include "commandEncoder.h"
 // ---
 
 // --- Commons

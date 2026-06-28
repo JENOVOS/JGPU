@@ -17,6 +17,7 @@ namespace jgpu::d3d12
 
 		[[nodiscard]] JCreateResult<Queue> CreateQueue(QueueType type) override;
 		[[nodiscard]] JCreateResult<TextureView> CreateTextureView(Texture& texture, const TextureViewSpecification& spec) override;
+		[[nodiscard]] JCreateResult<CommandEncoder> CreateCommandEncoder(const QueueType type) override;
 
 		[[nodiscard]] ID3D12Device5* GetNativeDevice() const { return device_.Get(); }
 

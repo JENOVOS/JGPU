@@ -8,6 +8,7 @@ namespace jgpu
 	class Queue;
 	class TextureView;
 	class Texture;
+	class CommandEncoder;
 	class Device
 	{
 	public:
@@ -17,5 +18,6 @@ namespace jgpu
 
 		[[nodiscard]] virtual JCreateResult<Queue> CreateQueue(QueueType type) = 0;
 		[[nodiscard]] virtual JCreateResult<TextureView> CreateTextureView(Texture& texture, const TextureViewSpecification& spec) = 0;
+		[[nodiscard]] virtual JCreateResult<CommandEncoder> CreateCommandEncoder(const QueueType type) = 0;
 	};
 }

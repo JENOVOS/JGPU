@@ -4,6 +4,7 @@
 #include "dx12Queue.h"
 #include "dx12Texture.h"
 #include "dx12TextureView.h"
+#include "dx12CommandEncoder.h"
 #include "dx12Utils.h"
 
 namespace jgpu::d3d12
@@ -53,6 +54,11 @@ namespace jgpu::d3d12
 		default:
 			return std::unexpected{ "Unsupported texture view type" };
 		}
+	}
+
+	JCreateResult<CommandEncoder> DX12Device::CreateCommandEncoder(const QueueType type)
+	{
+		return DX12CommandEncoder::CreateCommandEncoder(*this, type);
 	}
 
 	DX12Device::DX12Device(Microsoft::WRL::ComPtr<ID3D12Device5>&& device)

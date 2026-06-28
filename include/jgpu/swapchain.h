@@ -13,5 +13,8 @@ namespace jgpu
 		virtual ~Swapchain() noexcept = default;
 
 		[[nodiscard]] virtual JCreateResult<Texture> GetBackBuffer(uint32_t index) = 0;
+		[[nodiscard]] virtual uint32_t GetCurrentBackBufferIdx() = 0;
+
+		virtual JVoidResult Present() = 0;
 	};
 }

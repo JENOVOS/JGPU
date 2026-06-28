@@ -7,6 +7,60 @@ namespace jgpu::d3d12::utils
 	void ThrowIfFailed(HRESULT hr);
 	std::unexpected<std::string> MakeHResultError(const char* message, HRESULT hr);
 
+    inline D3D12_COMMAND_LIST_TYPE ToCmdListType(QueueType type)
+    {
+        switch (type)
+        {
+        case QueueType::Graphics:
+            return D3D12_COMMAND_LIST_TYPE_DIRECT;
+        case QueueType::Compute:
+            return D3D12_COMMAND_LIST_TYPE_COMPUTE;
+        case QueueType::Copy:
+            return D3D12_COMMAND_LIST_TYPE_COPY;
+        }
+
+        return D3D12_COMMAND_LIST_TYPE_NONE;
+    }
+
+    inline D3D12_RESOURCE_STATES ToResState(ResourceState state)
+    {
+        switch (state)
+        {
+        case jgpu::ResourceState::Undefined:
+            return D3D12_RESOURCE_STATE_COMMON;
+
+        case jgpu::ResourceState::Present:
+            return D3D12_RESOURCE_STATE_PRESENT;
+
+        case jgpu::ResourceState::RenderTarget:
+            return D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+        case jgpu::ResourceState::CopySource:
+            return D3D12_RESOURCE_STATE_COPY_SOURCE;
+
+        case jgpu::ResourceState::CopyDestination:
+            return D3D12_RESOURCE_STATE_COPY_DEST;
+
+        case jgpu::ResourceState::VertexBuffer:
+            return D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+
+        case jgpu::ResourceState::IndexBuffer:
+            return D3D12_RESOURCE_STATE_INDEX_BUFFER;
+
+        case jgpu::ResourceState::ConstantBuffer:
+            return D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+
+        case jgpu::ResourceState::ShaderResource:
+            return D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+
+        case jgpu::ResourceState::UnorderedAccess:
+            return D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+
+        default:
+            return D3D12_RESOURCE_STATE_COMMON;
+        }
+    }
+
     inline DXGI_FORMAT ToDXGIFormat(Format format)
     {
         switch (format)

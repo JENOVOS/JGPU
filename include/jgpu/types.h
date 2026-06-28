@@ -25,4 +25,12 @@ namespace jgpu
 		uint32_t arrayLayer = 0;
 	};
 
+	struct ClearColor
+	{
+		float r = 0;
+		float g = 0;
+		float b = 0;
+		float a = 1;
+	};
+
 }

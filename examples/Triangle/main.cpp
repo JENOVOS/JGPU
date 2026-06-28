@@ -6,6 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
+#include <type_traits>
+
 template<class T>
 T UnwrapOrExit(jgpu::JResult<T>&& result)
 {
@@ -18,9 +20,23 @@ T UnwrapOrExit(jgpu::JResult<T>&& result)
 	return std::move(result.value());
 }
 
+void UnwrapOrExit(jgpu::JVoidResult&& result)
+{
+	if (!result)
+	{
+		std::cerr << result.error() << std::endl;
+		std::exit(-1);
+	}
+}
+
 static constexpr uint32_t WINDOW_WIDTH = 1280;
 static constexpr uint32_t WINDOW_HEIGHT = 720;
 static constexpr uint32_t DOUBLE_BUFFERING = 2;
+
+struct FrameResource
+{
+	jgpu::JPtr<jgpu::CommandEncoder> cmdEncoder;
+};
 
 int main()
 {
@@ -35,7 +51,7 @@ int main()
 	}
 
 	auto factory = UnwrapOrExit(jgpu::CreateFactory(jgpu::GraphicsAPI::DirectX12));
-	auto instance = UnwrapOrExit(factory->CreateInstance(true));
+	auto instance = UnwrapOrExit(factory->CreateInstance());
 	auto adapter = UnwrapOrExit(instance->FindAdapter());
 	auto device = UnwrapOrExit(adapter->CreateDevice());
 	auto graphicsQueue = UnwrapOrExit(device->CreateQueue(jgpu::QueueType::Graphics));
@@ -66,10 +82,35 @@ int main()
 		backBuffers.push_back(std::move(backBuffer));
 	}
 
+	std::vector<FrameResource> frameResources;
+	frameResources.resize(swapchainSpec.bufferCount);
+	for (uint32_t i = 0; i < swapchainSpec.bufferCount; i++)
+	{
+		frameResources[i].cmdEncoder = std::move(UnwrapOrExit(device->CreateCommandEncoder(jgpu::QueueType::Graphics)));
+	}
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
+
+		graphicsQueue->WaitIdle();
+		
+		const auto frameIdx = swapchain->GetCurrentBackBufferIdx();
+		auto& frame = frameResources[frameIdx];
+
+		frame.cmdEncoder->Begin();
+		frame.cmdEncoder->TransitionTexture(*backBuffers[frameIdx], jgpu::ResourceState::Present, jgpu::ResourceState::RenderTarget);
+
+		jgpu::ClearColor col{.r = 0.1f, .g = 0.1f, .b = 0.1f };
+		frame.cmdEncoder->ClearTextureView(*backBufferViews[frameIdx], col);
+		
+		frame.cmdEncoder->TransitionTexture(*backBuffers[frameIdx], jgpu::ResourceState::RenderTarget, jgpu::ResourceState::Present);
+		frame.cmdEncoder->Finish();
+		graphicsQueue->Submit(*frame.cmdEncoder);
+		swapchain->Present();
 	}
+
+	graphicsQueue->WaitIdle();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();

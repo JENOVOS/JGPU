@@ -20,6 +20,8 @@ namespace jgpu::d3d12
 		);
 
 		[[nodiscard]] JCreateResult<jgpu::Texture> GetBackBuffer(uint32_t index) override;
+		[[nodiscard]] uint32_t GetCurrentBackBufferIdx() override;
+		JVoidResult Present() override;
 
 		[[nodiscard]] IDXGISwapChain4* GetNativeSwapchain() const { return swapchain_.Get(); }
 

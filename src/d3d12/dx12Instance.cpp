@@ -12,18 +12,17 @@ namespace jgpu::d3d12
 	{
 	}
 
-	JCreateResult<DX12Instance> DX12Instance::CreateInstance(bool enableDebug)
+	JCreateResult<DX12Instance> DX12Instance::CreateInstance()
 	{
 		uint32_t dxgiFalgs = 0;
-		if (enableDebug)
+#ifdef JGPU_ENABLE_DEBUG
+		Microsoft::WRL::ComPtr<ID3D12Debug> debugController;
+		if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
 		{
-			Microsoft::WRL::ComPtr<ID3D12Debug> debugController;
-			if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-			{
-				debugController->EnableDebugLayer();
-				dxgiFalgs |= DXGI_CREATE_FACTORY_DEBUG;
-			}
+			debugController->EnableDebugLayer();
+			dxgiFalgs |= DXGI_CREATE_FACTORY_DEBUG;
 		}
+#endif
 
 		Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory;
 		auto hr = CreateDXGIFactory2(dxgiFalgs, IID_PPV_ARGS(&dxgiFactory));
