@@ -7,6 +7,7 @@ namespace jgpu
 	class Instance
 	{
 	public:
+		JGPU_NON_MOVE_AND_COPY(Instance)
 		Instance() = default;
 		virtual ~Instance() noexcept = default;
 

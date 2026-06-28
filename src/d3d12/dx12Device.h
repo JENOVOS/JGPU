@@ -8,6 +8,7 @@ namespace jgpu::d3d12
 	class DX12Device final : public jgpu::Device
 	{
 	public:
+		JGPU_NON_MOVE_AND_COPY(DX12Device)
 		~DX12Device() noexcept = default;
 
 		[[nodiscard]] static JCreateResult<DX12Device> CreateDevice(const DX12Adapter& adapter);

@@ -6,6 +6,7 @@ namespace jgpu::d3d12
 	class DX12Instance : public jgpu::Instance
 	{
 	public:
+		JGPU_NON_MOVE_AND_COPY(DX12Instance)
 		~DX12Instance() noexcept = default;
 
 		[[nodiscard]] static JCreateResult<DX12Instance> CreateInstance(bool enableDebug = false);

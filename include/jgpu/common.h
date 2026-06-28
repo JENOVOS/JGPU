@@ -19,3 +19,9 @@ namespace jgpu
         return std::unexpected<std::string>{ std::move(message) };
     }
 }
+
+#define JGPU_NON_MOVE_AND_COPY(className)               \
+    className(const className&) = delete;               \
+    className& operator=(const className&) = delete;    \
+    className(className&&) noexcept = delete;           \
+    className& operator=(className&&) noexcept = delete;

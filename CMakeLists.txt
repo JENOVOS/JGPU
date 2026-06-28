@@ -4,6 +4,7 @@ project(jgpu VERSION 0.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # 出力ディレクトリ設定
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -18,7 +19,7 @@ option(JGPU_ENABLE_DEBUG "Enable debug layer" ON)
 set(JGPU_CORE_SOURCES
     "include/jgpu/types.h"
     "include/jgpu/enumes.h"
- "include/jgpu/handle.h" "include/jgpu/instance.h" "include/jgpu/factory.h" "src/core/factory.cpp" "include/jgpu/Adapter.h" "include/jgpu/common.h" "include/jgpu/device.h")
+ "include/jgpu/handle.h" "include/jgpu/instance.h" "include/jgpu/factory.h" "src/core/factory.cpp" "include/jgpu/Adapter.h" "include/jgpu/common.h" "include/jgpu/device.h" "include/jgpu/queue.h")
 
 set(JGPU_DX12_SOURCES
     "src/d3d12/dx12Instance.cpp"
@@ -29,7 +30,7 @@ add_library(jgpu STATIC
     ${JGPU_CORE_SOURCES}
     ${JGPU_DX12_SOURCES}
  "include/jgpu/enumes.h"
- "include/jgpu/handle.h" "include/jgpu/instance.h" "src/d3d12/dx12Instance.h" "src/d3d12/dx12Utils.h" "src/d3d12/dx12Utils.cpp"  "src/d3d12/dx12Factory.h" "include/jgpu/factory.h" "src/d3d12/dx12Factory.cpp" "src/core/factory.cpp" "include/jgpu/adapter.h" "src/d3d12/dx12Adapter.h" "src/d3d12/dx12Adapter.cpp" "include/jgpu/common.h" "include/jgpu/device.h" "src/d3d12/dx12Device.h" "src/d3d12/dx12Device.cpp")
+ "include/jgpu/handle.h" "include/jgpu/instance.h" "src/d3d12/dx12Instance.h" "src/d3d12/dx12Utils.h" "src/d3d12/dx12Utils.cpp"  "src/d3d12/dx12Factory.h" "include/jgpu/factory.h" "src/d3d12/dx12Factory.cpp" "src/core/factory.cpp" "include/jgpu/adapter.h" "src/d3d12/dx12Adapter.h" "src/d3d12/dx12Adapter.cpp" "include/jgpu/common.h" "include/jgpu/device.h" "src/d3d12/dx12Device.h" "src/d3d12/dx12Device.cpp" "include/jgpu/queue.h")
 
 # 公開ヘッダー
 target_include_directories(jgpu PUBLIC

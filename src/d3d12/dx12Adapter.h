@@ -7,6 +7,7 @@ namespace jgpu::d3d12
 	class DX12Adapter final : public jgpu::Adapter
 	{
 	public:
+		JGPU_NON_MOVE_AND_COPY(DX12Adapter)
 		~DX12Adapter() noexcept = default;
 
 		[[nodiscard]] static JCreateResult<DX12Adapter> FindAdapter(IDXGIFactory7* ptrDXGIFactory);
