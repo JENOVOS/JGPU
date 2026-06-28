@@ -50,10 +50,19 @@ int main()
 	auto swapchain = UnwrapOrExit(instance->CreateSwapchain(*graphicsQueue, swapchainSpec));
 
 	std::vector<jgpu::JPtr<jgpu::Texture>> backBuffers;
+	std::vector<jgpu::JPtr<jgpu::TextureView>> backBufferViews;
 	backBuffers.reserve(swapchainSpec.bufferCount);
+	backBufferViews.reserve(swapchainSpec.bufferCount);
 	for (uint32_t i = 0; i < swapchainSpec.bufferCount; i++)
 	{
-		auto backBuffer = UnwrapOrExit(swapchain->GetBuffer(i));
+		auto backBuffer = UnwrapOrExit(swapchain->GetBackBuffer(i));
+
+		jgpu::TextureViewSpecification texViewSpec{};
+		texViewSpec.type = jgpu::TextureViewType::RenderTarget;
+		texViewSpec.format = swapchainSpec.format;
+		auto textureView = UnwrapOrExit(device->CreateTextureView(*backBuffer, texViewSpec));
+
+		backBufferViews.push_back(std::move(textureView));
 		backBuffers.push_back(std::move(backBuffer));
 	}
 

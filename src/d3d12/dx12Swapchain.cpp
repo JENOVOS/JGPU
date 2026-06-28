@@ -54,7 +54,7 @@ namespace jgpu::d3d12
 		return std::unique_ptr<DX12Swapchain>(new DX12Swapchain(swapchain, spec));
 	}
 
-	JCreateResult<Texture> DX12Swapchain::GetBuffer(uint32_t index)
+	JCreateResult<Texture> DX12Swapchain::GetBackBuffer(uint32_t index)
 	{
 		Microsoft::WRL::ComPtr<ID3D12Resource> buffer;
 		auto hr = swapchain_->GetBuffer(static_cast<UINT>(index), IID_PPV_ARGS(&buffer));
@@ -69,6 +69,5 @@ namespace jgpu::d3d12
 	DX12Swapchain::DX12Swapchain(Microsoft::WRL::ComPtr<IDXGISwapChain4> swapchain, jgpu::SwapchainSpecification spec)
 		: swapchain_(std::move(swapchain)), spec_(spec)
 	{
-
 	}
 }

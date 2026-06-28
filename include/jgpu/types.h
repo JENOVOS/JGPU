@@ -1,4 +1,5 @@
 #pragma once
+#include "enumes.h"
 
 namespace jgpu
 {
@@ -15,4 +16,13 @@ namespace jgpu
 		Format format = Format::RGBA8_UNORM;
 		void* windowHandle = nullptr;
 	};
+
+	struct TextureViewSpecification
+	{
+		TextureViewType type;
+		Format format;
+		uint32_t mipLevel = 0;
+		uint32_t arrayLayer = 0;
+	};
+
 }

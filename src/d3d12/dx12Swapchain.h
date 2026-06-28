@@ -19,7 +19,7 @@ namespace jgpu::d3d12
 			const jgpu::SwapchainSpecification& spec
 		);
 
-		[[nodiscard]] JCreateResult<jgpu::Texture> GetBuffer(uint32_t index) override;
+		[[nodiscard]] JCreateResult<jgpu::Texture> GetBackBuffer(uint32_t index) override;
 
 		[[nodiscard]] IDXGISwapChain4* GetNativeSwapchain() const { return swapchain_.Get(); }
 

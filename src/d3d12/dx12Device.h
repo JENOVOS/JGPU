@@ -2,6 +2,8 @@
 #include "jgpu/common.h"
 #include "jgpu/device.h"
 
+#include "dx12DescriptorAllocator.h"
+
 namespace jgpu::d3d12
 {
 	class DX12Adapter;
@@ -14,11 +16,14 @@ namespace jgpu::d3d12
 		[[nodiscard]] static JCreateResult<DX12Device> CreateDevice(const DX12Adapter& adapter);
 
 		[[nodiscard]] JCreateResult<Queue> CreateQueue(QueueType type) override;
+		[[nodiscard]] JCreateResult<TextureView> CreateTextureView(Texture& texture, const TextureViewSpecification& spec) override;
 
 		[[nodiscard]] ID3D12Device5* GetNativeDevice() const { return device_.Get(); }
 
 	private:
-		DX12Device(Microsoft::WRL::ComPtr<ID3D12Device5> device);
+		DX12Device(Microsoft::WRL::ComPtr<ID3D12Device5>&& device);
 		Microsoft::WRL::ComPtr<ID3D12Device5> device_;
+
+		std::unique_ptr<DX12RtvAllocator> rtvAllocator_;
 	};
 }

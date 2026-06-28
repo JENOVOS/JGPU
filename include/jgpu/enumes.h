@@ -15,6 +15,14 @@ namespace jgpu
 		Copy
 	};
 
+    enum class TextureViewType
+    {
+        RenderTarget,
+        DepthStencil,
+        ShaderResource,
+        UnorderedAccess,
+    };
+
     enum class Format : uint32_t
     {
         Undefined = 0,

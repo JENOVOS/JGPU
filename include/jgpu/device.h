@@ -1,10 +1,13 @@
 #pragma once
 #include "common.h"
 #include "enumes.h"
+#include "types.h"
 
 namespace jgpu
 {
 	class Queue;
+	class TextureView;
+	class Texture;
 	class Device
 	{
 	public:
@@ -13,5 +16,6 @@ namespace jgpu
 		virtual ~Device() noexcept = default;
 
 		[[nodiscard]] virtual JCreateResult<Queue> CreateQueue(QueueType type) = 0;
+		[[nodiscard]] virtual JCreateResult<TextureView> CreateTextureView(Texture& texture, const TextureViewSpecification& spec) = 0;
 	};
 }

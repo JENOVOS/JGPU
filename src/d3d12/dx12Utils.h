@@ -1,12 +1,13 @@
 #pragma once
 #include <expected>
+#include "jgpu/enumes.h"
 
 namespace jgpu::d3d12::utils
 {
 	void ThrowIfFailed(HRESULT hr);
 	std::unexpected<std::string> MakeHResultError(const char* message, HRESULT hr);
 
-    DXGI_FORMAT ToDXGIFormat(Format format)
+    inline DXGI_FORMAT ToDXGIFormat(Format format)
     {
         switch (format)
         {

@@ -45,7 +45,7 @@ set(JGPU_DX12_SOURCES
     "src/d3d12/dx12Queue.cpp" 
     "src/d3d12/dx12Swapchain.h" 
     "src/d3d12/dx12Swapchain.cpp"
- "src/d3d12/dx12Buffer.h" "src/d3d12/dx12Buffer.cpp" "src/d3d12/dx12Texture.h" "src/d3d12/dx12Texture.cpp")
+ "src/d3d12/dx12Buffer.h" "src/d3d12/dx12Buffer.cpp" "src/d3d12/dx12Texture.h" "src/d3d12/dx12Texture.cpp" "src/d3d12/dx12DescriptorAllocator.h" "src/d3d12/dx12DescriptorAllocator.cpp" "src/d3d12/dx12TextureView.h" "src/d3d12/dx12TextureView.cpp")
 
 # ライブラリ作成
 add_library(jgpu STATIC
@@ -74,7 +74,7 @@ add_library(jgpu STATIC
     "include/jgpu/swapchain.h"
     "src/d3d12/dx12Swapchain.h" 
     "src/d3d12/dx12Swapchain.cpp"
- "include/jgpu/buffer.h" "src/d3d12/dx12Buffer.h" "src/d3d12/dx12Buffer.cpp" "include/jgpu/resouce.h" "include/jgpu/texture.h" "src/d3d12/dx12Texture.h" "src/d3d12/dx12Texture.cpp" "include/jgpu/textureView.h")
+ "include/jgpu/buffer.h" "src/d3d12/dx12Buffer.h" "src/d3d12/dx12Buffer.cpp" "include/jgpu/resouce.h" "include/jgpu/texture.h" "src/d3d12/dx12Texture.h" "src/d3d12/dx12Texture.cpp" "include/jgpu/textureView.h" "src/d3d12/dx12DescriptorAllocator.h" "src/d3d12/dx12DescriptorAllocator.cpp" "src/d3d12/dx12TextureView.h" "src/d3d12/dx12TextureView.cpp")
 
 # 公開ヘッダー
 target_include_directories(jgpu PUBLIC
